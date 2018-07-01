@@ -38,7 +38,7 @@ const styles = theme => ({
         backgroundColor: theme.palette.background.paper,
     },
     nested: {
-        paddingLeft: theme.spacing.unit * 4,
+        paddingLeft: theme.spacing.unit * 5,
     },
     card : {
         maxwidth: 360,
@@ -49,117 +49,177 @@ const styles = theme => ({
     },
 });
 
-class DepartIntro extends Component {
+class MenuList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            open: true,
+            open1 : true, 
+            open2 : true,
+            open3 : true, 
+            // menuContent : menuList
         };
     };
-
-    handleClick = () => {
-        this.setState(state => ({open : !state.open}));
-    };
-
-    render() {
-        const { classes } = this.props;
-        //const listContent = ["部门简介", "部门架构", "部长寄语", "照片墙"];
-        const listContent = [
-            { 
-                icon : <Home/>, 
-                text : "部门简介"
-            },
-            {
-                icon : <People/>,
-                text : "部门架构"
-            },
-            {
-                icon : <School/>,
-                text : "部长寄语"
-            },
-            {
-                icon : <Camera />,
-                text : "照片墙"
-            }
-        ];
-        return (
-            <div className={classes.root}>
-                <Card className={classes.card}>
-                    <CardMedia className={classes.media}
-                        image={Pic1}
-                        title="Card Media"
-                    />
-                </Card>
-                <Divider/>
-                <List component="nav" subheader={<ListSubheader component="div">部门概述</ListSubheader>}>
-                    <ListItem button onClick={this.handleClick}>
-                        <ListItemText inset primary="部门概述" />
-                    </ListItem>
-                    <Collapse in={this.state.open} timeout="auto" unmountOnExit>
-                        <List component="div" disablePadding>
-                            {listContent.map((s, i) => {
-                                return (
-                                    <ListItem button className={classes.nested} key={i}>
-                                        <ListItemIcon>{s.icon}</ListItemIcon>
-                                        <ListItemText inset primary={s.text} />
-                                    </ListItem>
-                                );
-                            })}
-                        </List>
-                    </Collapse>
-                </List>
-            </div>
-        );
-    }
-}
-
-DepartIntro.propTypes = {
-    classes : PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(DepartIntro);
-/*
-class Member extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            open : true,
-        };
-    };
-
-    handleClick = () => {
-        this.setState(state => ({open : !state.open}));
+    
+    handleClick = (e, value) => {
+        let v = this.state[value];
+        this.setState({
+            [value]: !v,
+        });
     };
 
     render () {
         const {classes} = this.props;
-        const listContent = [
+        const menu = [
             {
-                icon : <Assignment/>,
-                text : "部员守则"
+                icon: null,
+                title: "部门概述",
+                name: 'open1',
+                action: null,
+                children: [
+                    {
+                        icon: <Home />,
+                        title: "部门简介",
+                        children: null,
+                    },
+                    {
+                        icon: <People />,
+                        title: "人事架构",
+                        children: null,
+                    },
+                    {
+                        icon: <School />,
+                        title: "部长寄语",
+                        children: null,
+                    },
+                    {
+                        icon: <Camera />,
+                        title: "照片墙",
+                    }
+                ]
             },
             {
-                icon : <Notification/>,
-                text : "临时业务"
+                icon: null,
+                title: "部员手册",
+                name: 'open2',
+                action: null,
+                children: [
+                    {
+                        icon: <Assignment />,
+                        title: "部员守则",
+                        children: null,
+                    },
+                    {
+                        icon: <Notification />,
+                        title: "临时业务",
+                        children: null,
+                    },
+                    {
+                        icon: <Notes />,
+                        title: "长期业务",
+                        children: null,
+                    },
+                    {
+                        icon: <Calendar />,
+                        title: "排班表",
+                        children: null
+                    },
+                    {
+                        icon: <Supervisor />,
+                        title: "老师&辅导员",
+                        children: null
+                    }
+                ]
             },
             {
-                icon : <Notes/>,
-                text : "长期业务"
+                icon: null,
+                title: "部门日常",
+                name: 'open3',
+                action: null,
+                children: [
+                    {
+                        icon: <Forum />,
+                        title: "日常疑问",
+                        children: null,
+                    },
+                    {
+                        icon: <Comment />,
+                        title: "日常吐槽",
+                        children: null
+                    },
+                    {
+                        icon: <Comment />,
+                        title: "表白墙",
+                        children: null
+                    }
+                ]
             },
             {
-                icon : <Calendar/>,
-                text : "排班表"
+                icon: <Feedback />,
+                title: "建议与投诉",
+                name: null,
+                action: () => {
+                    console.log("Click 建议与投诉");
+                    alert("你点击了 “建议与投诉”");
+                },
+                children: null,
             },
             {
-                icon : <Supervisor/>,
-                text : "老师&辅导员"
+                icon: <ContactMail />,
+                title: "联系我们",
+                name: null,
+                action: () => {
+                    console.log("Click 联系我们");
+                    alert("你点击了 “联系我们”");
+                },
+                children: null
             }
         ];
 
         return (
-            <div>
-                <
+            <div className={classes.root}>
+                <List component="nav">
+                {
+                    menu.map((s, i) => {
+                        // console.log(s);
+                        return (
+                            s.children === null ? 
+                            <div key={i}>
+                                <ListItem button onClick={s.action}>
+                                    <ListItemIcon>{s.icon}</ListItemIcon>
+                                    <ListItemText inset primary={s.title}/>
+                                </ListItem>
+                            </div>
+                            :
+                            <div key={i}>
+                                <ListItem button name={s.name} value={this.state[s.name]} onClick={(e) => {
+                                    this.handleClick(e, s.name);
+                                }}>
+                                    <ListItemText inset primary={s.title}/>
+                                </ListItem>
+                                <Collapse in={this.state[s.name]} time="auto" unmountOnExit>
+                                    <List component="div" disablePadding>
+                                        {s.children.map((ss, j) =>{
+                                            return (
+                                                <ListItem button className={classes.nested} key={j}>
+                                                    <ListItemIcon>{ss.icon}</ListItemIcon>
+                                                    <ListItemText inset primary={ss.title} />
+                                                </ListItem>
+                                            );
+                                        })}
+                                    </List>
+                                </Collapse>
+                            </div>
+                        );
+                    })
+                }
+                </List>
+            </div>
         )
     }
-}
-*/
+};
+
+MenuList.propTypes = {
+    classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(MenuList);
